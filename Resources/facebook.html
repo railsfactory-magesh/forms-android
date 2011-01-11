@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<script type="text/javascript" src="jquery-1.4.4.js"></script>
+	<meta name="format-detection" content="telephone=no"/>
+	<script>
+	  function send()
+	  {
+	  var name = document.getElementById('name').value;
+	  var title = document.getElementById('title').value;
+	  var content = document.getElementById('content').value;
+	  Ti.API.info("clicked on send button");
+	  Ti.API.info(name);
+	  alert(name);
+
+	  
+	  	var xhr = Titanium.Network.createHTTPClient();
+
+		xhr.onerror = function(e)
+		{
+			Ti.UI.createAlertDialog({title:'Error', message:e.error}).show();
+			Ti.API.info('IN ERROR ' + e.error);
+		};
+		xhr.setTimeout(20000);
+		xhr.onload = function(e)
+		{
+			Ti.UI.createAlertDialog({title:'Success', message:'status code ' + this.status}).show();
+			Ti.API.info('IN ONLOAD ' + this.status + ' readyState ' + this.readyState);
+		};
+		xhr.onsendstream = function(e)
+		{
+			ind.value = e.progress ;
+			Ti.API.info('ONSENDSTREAM - PROGRESS: ' + e.progress);
+		};
+		// open the client
+		xhr.open('POST','https://192.168.1.175:3000/posts');
+
+		// send the data
+	  xhr.send({post: { name:"John", title: "2pm" }});
+	  
+	  
+	 };
+
+
+</script>
+
+</head>
+<body id="mybody">
+<form>
+<b>Name:</b> <input type="text" id="name"></input>
+<b>Title</b> <input type="text" id="title"></input>
+<b>Content</b><input type="textarea" rows="2" cols="20" id="content"></input>
+<input type="button" value="Send" onclick="send(); return false;"></input>
+</form>		
+</body>
+</html>
